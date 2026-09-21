@@ -50,6 +50,8 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
  *
  */
 public class mecanumDriveFunctions {
+
+    targetLock TL = new targetLock();
     // This declares the four motors needed
     private DcMotor frontLeft, backLeft, frontRight, backRight;
 

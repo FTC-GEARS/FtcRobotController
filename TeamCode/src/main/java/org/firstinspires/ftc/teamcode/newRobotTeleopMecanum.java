@@ -8,10 +8,14 @@ import com.qualcomm.robotcore.hardware.IMU;
 public class newRobotTeleopMecanum extends OpMode {
 
     mecanumDriveFunctions MDF = new mecanumDriveFunctions();
+    intakeV3 intake = new intakeV3();
+    targetLock TL = new targetLock();
     @Override
     public void init() {
     MDF.initMecanum(hardwareMap);
+    intake.initIntake(hardwareMap, gamepad1.a);
     }
+
     IMU imu;
     @Override
     public void loop() {
