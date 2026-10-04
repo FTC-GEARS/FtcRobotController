@@ -25,7 +25,7 @@ public class newRobotTeleopMecanum extends OpMode {
     }
 
     private enum transferState{
-        MOTOR_ON(1.0),
+        MOTOR_ON(0.5),
         MOTOR_OFF(0.0);
 
         public final double power;
@@ -35,7 +35,24 @@ public class newRobotTeleopMecanum extends OpMode {
         }
     }
 
+    private enum shooterState{
+        MOTOR_ON(0.5),
+        MOTOR_OFF(0.0);
+
+        public final double power;
+
+        shooterState(double power) {
+            this.power = power;
+        }
+    }
+
     IMU imu;
+
+    private newRobotTeleopMecanum.transferState transferStateM = newRobotTeleopMecanum.transferState.MOTOR_OFF;
+    private newRobotTeleopMecanum.shooterState shooterStateM = newRobotTeleopMecanum.shooterState.MOTOR_OFF;
+
+
+
     @Override
     public void loop() {
         telemetry.addLine("Press x to reset Yaw");
@@ -61,19 +78,28 @@ public class newRobotTeleopMecanum extends OpMode {
             intake.toggleState();
         }
 
-        transfer.setPower(1);
-        shooter.setPower(1);
 
-        /*if (gamepad2.a){
-            if (transferState == transferState.MOTOR_OFF) {
-                currentState = intakeV3.MotorState.MOTOR_ON;
+        if (gamepad2.x){
+            if (transferStateM == transferState.MOTOR_OFF) {
+                transferStateM = newRobotTeleopMecanum.transferState.MOTOR_ON;
 
             } else {
-                currentState = intakeV3.MotorState.MOTOR_OFF;
+                transferStateM = newRobotTeleopMecanum.transferState.MOTOR_OFF;
             }
 
-            intake.setPower(currentState.power);
-        }*/
+            transfer.setPower(transferStateM.power);
+        }
+
+        if (gamepad2.y){
+            if (shooterStateM == shooterState.MOTOR_OFF) {
+                shooterStateM = newRobotTeleopMecanum.shooterState.MOTOR_ON;
+
+            } else {
+                shooterStateM = newRobotTeleopMecanum.shooterState.MOTOR_OFF;
+            }
+
+            shooter.setPower(shooterStateM.power);
+        }
 
     }
 
