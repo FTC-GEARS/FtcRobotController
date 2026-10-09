@@ -25,7 +25,7 @@ public class newRobotTeleopMecanum extends OpMode {
     }
 
     private enum transferState{
-        MOTOR_ON(0.5),
+        MOTOR_ON(1.0),
         MOTOR_OFF(0.0);
 
         public final double power;
@@ -36,7 +36,7 @@ public class newRobotTeleopMecanum extends OpMode {
     }
 
     private enum shooterState{
-        MOTOR_ON(0.5),
+        MOTOR_ON(0.75),
         MOTOR_OFF(0.0);
 
         public final double power;
@@ -50,6 +50,7 @@ public class newRobotTeleopMecanum extends OpMode {
 
     private newRobotTeleopMecanum.transferState transferStateM = newRobotTeleopMecanum.transferState.MOTOR_OFF;
     private newRobotTeleopMecanum.shooterState shooterStateM = newRobotTeleopMecanum.shooterState.MOTOR_OFF;
+    public boolean dBounce = false;
 
 
 
@@ -74,8 +75,12 @@ public class newRobotTeleopMecanum extends OpMode {
             MDF.driveFieldRelative(-gamepad1.left_stick_y, gamepad1.left_stick_x, gamepad1.right_stick_x);
         }
 
-        if (gamepad2.b){
+        if (gamepad2.b && !dBounce){
             intake.toggleState();
+            dBounce = true;
+        }
+        else{
+            dBounce = false;
         }
 
 
@@ -88,6 +93,10 @@ public class newRobotTeleopMecanum extends OpMode {
             }
 
             transfer.setPower(transferStateM.power);
+            dBounce = true;
+        }
+        else{
+            dBounce = false;
         }
 
         if (gamepad2.y){
@@ -99,6 +108,10 @@ public class newRobotTeleopMecanum extends OpMode {
             }
 
             shooter.setPower(shooterStateM.power);
+            dBounce = true;
+        }
+        else{
+            dBounce = false;
         }
 
     }

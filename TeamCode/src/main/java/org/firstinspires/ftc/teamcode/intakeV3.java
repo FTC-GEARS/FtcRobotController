@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import java.util.function.Supplier;
@@ -13,6 +14,8 @@ public class intakeV3 {
     public void initIntake(HardwareMap hardwareMap){
 
         intake = hardwareMap.get(DcMotorEx.class, "intake");
+
+        //intake.setDirection(DcMotor.Direction.REVERSE);
 
     }
     private enum MotorState{
