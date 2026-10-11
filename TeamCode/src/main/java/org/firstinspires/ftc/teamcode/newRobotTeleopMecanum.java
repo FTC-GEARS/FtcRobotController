@@ -1,9 +1,11 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.IMU;
 
+@Disabled
 @TeleOp(name = "Robot: USE THIS MECANUM", group = "Robot")
 public class newRobotTeleopMecanum extends OpMode {
 
@@ -13,7 +15,7 @@ public class newRobotTeleopMecanum extends OpMode {
     @Override
     public void init() {
     MDF.initMecanum(hardwareMap);
-    intake.initIntake(hardwareMap, gamepad1.a);
+    //intake.initIntake(hardwareMap, gamepad1.a);
     }
 
     IMU imu;
