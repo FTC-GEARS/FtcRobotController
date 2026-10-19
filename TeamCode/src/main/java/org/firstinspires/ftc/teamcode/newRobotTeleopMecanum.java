@@ -22,7 +22,11 @@ public class newRobotTeleopMecanum extends OpMode {
 
         transfer.setDirection(DcMotor.Direction.REVERSE);
         shooter.setDirection(DcMotor.Direction.REVERSE);
+
+
     }
+
+    public IMU imu;
 
     private enum transferState{
         MOTOR_ON(1.0),
@@ -46,27 +50,30 @@ public class newRobotTeleopMecanum extends OpMode {
         }
     }
 
-    IMU imu;
+
 
     private newRobotTeleopMecanum.transferState transferStateM = newRobotTeleopMecanum.transferState.MOTOR_OFF;
     private newRobotTeleopMecanum.shooterState shooterStateM = newRobotTeleopMecanum.shooterState.MOTOR_OFF;
-    public boolean dBounce = false;
+    public boolean IntakeDBounce, passerDBounce, shooterDBounce = false;
+
 
 
 
     @Override
     public void loop() {
+        String GetSpeed = MDF.getSpeed().toString();
         telemetry.addLine("Press x to reset Yaw");
         telemetry.addLine("Hold left bumper to drive in robot relative");
         telemetry.addLine("The left joystick sets the robot direction");
         telemetry.addLine("Moving the right joystick left and right turns the robot");
         telemetry.addLine("Aim robot the robot direction as you and press x to reset yaw");
-
+        telemetry.addLine(GetSpeed);
         // If you press the A button, then you reset the Yaw to be zero from the way
         // the robot is currently pointing
-        if (gamepad1.a) {
+        if (gamepad1.right_bumper) {
             imu.resetYaw();
         }
+
         // If you press the left bumper, you get a drive from the point of view of the robot
         // (much like driving an RC vehicle)
         if (gamepad1.left_bumper) {
@@ -75,16 +82,15 @@ public class newRobotTeleopMecanum extends OpMode {
             MDF.driveFieldRelative(-gamepad1.left_stick_y, gamepad1.left_stick_x, gamepad1.right_stick_x);
         }
 
-        if (gamepad2.b && !dBounce){
+        if (gamepad1.b && !IntakeDBounce){
             intake.toggleState();
-            dBounce = true;
-        }
-        else{
-            dBounce = false;
+            IntakeDBounce = true;
+        } else if (!gamepad1.b && IntakeDBounce) {
+            IntakeDBounce = false;
         }
 
 
-        if (gamepad2.x){
+        if (gamepad1.x && !passerDBounce){
             if (transferStateM == transferState.MOTOR_OFF) {
                 transferStateM = newRobotTeleopMecanum.transferState.MOTOR_ON;
 
@@ -93,13 +99,13 @@ public class newRobotTeleopMecanum extends OpMode {
             }
 
             transfer.setPower(transferStateM.power);
-            dBounce = true;
+            passerDBounce = true;
         }
-        else{
-            dBounce = false;
+        else if (!gamepad1.x && passerDBounce){
+            passerDBounce = false;
         }
 
-        if (gamepad2.y){
+        if (gamepad1.y && !shooterDBounce){
             if (shooterStateM == shooterState.MOTOR_OFF) {
                 shooterStateM = newRobotTeleopMecanum.shooterState.MOTOR_ON;
 
@@ -108,10 +114,10 @@ public class newRobotTeleopMecanum extends OpMode {
             }
 
             shooter.setPower(shooterStateM.power);
-            dBounce = true;
+            shooterDBounce = true;
         }
-        else{
-            dBounce = false;
+        else if (!gamepad1.y && shooterDBounce){
+            shooterDBounce = false;
         }
 
     }

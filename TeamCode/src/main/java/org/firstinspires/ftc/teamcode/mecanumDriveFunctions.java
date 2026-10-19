@@ -66,9 +66,10 @@ public class mecanumDriveFunctions {
 
         // Most Mecanum setups require you to reverse the right motors so they drive forward
 
-        //frontRight.setDirection(DcMotor.Direction.REVERSE);
-        backLeft.setDirection(DcMotor.Direction.REVERSE);
-        frontLeft.setDirection(DcMotor.Direction.REVERSE);
+        frontRight.setDirection(DcMotor.Direction.REVERSE);
+        backLeft.setDirection(DcMotor.Direction.FORWARD);
+        backRight.setDirection(DcMotor.Direction.REVERSE);
+        frontLeft.setDirection(DcMotor.Direction.FORWARD);
 
 
 
@@ -118,8 +119,8 @@ public class mecanumDriveFunctions {
         double backRightPower = forward + right - rotate;
         double backLeftPower = forward - right + rotate;
 
-        double maxPower = 0.1;
-        double maxSpeed = 1.0;  // make this slower for outreaches
+        double maxPower = 1.0;
+        double maxSpeed = 0.5;  // make this slower for outreaches
 
         // This is needed to make sure we don't pass > 1.0 to any wheel
         // It allows us to keep all of the motors in proportion to what they should
@@ -136,7 +137,10 @@ public class mecanumDriveFunctions {
         frontRight.setPower(maxSpeed * (frontRightPower / maxPower));
         backLeft.setPower(maxSpeed * (backLeftPower / maxPower));
         backRight.setPower(maxSpeed * (backRightPower / maxPower));
+
     }
 
-
+    public Object getSpeed(){
+        return "FL" + Double.toString(frontLeft.getPower()) + "FR" + Double.toString(frontRight.getPower()) + "BL" + Double.toString(backLeft.getPower()) + "BR" + Double.toString(backRight.getPower());
+    }
 }
