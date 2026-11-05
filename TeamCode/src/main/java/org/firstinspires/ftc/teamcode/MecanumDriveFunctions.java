@@ -55,6 +55,8 @@ public class MecanumDriveFunctions {
 
     // This declares the IMU needed to get the current direction the robot is facing
     IMU imu;
+    private double maxPower;
+    private double maxSpeed;
 
 
     public void initMecanum(HardwareMap hardwareMap, double maxPower, double maxSpeed) {
@@ -62,6 +64,8 @@ public class MecanumDriveFunctions {
         frontRight = hardwareMap.get(DcMotor.class, "frontRight");
         backLeft = hardwareMap.get(DcMotor.class, "backLeft");
         backRight = hardwareMap.get(DcMotor.class, "backRight");
+        this.maxPower = maxPower;
+        this.maxSpeed = maxSpeed;
 
         // Most Mecanum setups require you to reverse the right motors so they drive forward
 
@@ -89,6 +93,7 @@ public class MecanumDriveFunctions {
         RevHubOrientationOnRobot orientationOnRobot = new
                 RevHubOrientationOnRobot(logoDirection, usbDirection);
         imu.initialize(new IMU.Parameters(orientationOnRobot));
+        imu.resetYaw();
     }
 
     // This routine drives the robot field relative
@@ -105,14 +110,15 @@ public class MecanumDriveFunctions {
         double newForward = r * Math.sin(theta);
         double newRight = r * Math.cos(theta);
 
+        // Counteract Mecanum strafe friction loss (strafe requires slightly higher effort)
+        newRight *= 1.1;
+
         // Finally, call the drive method with robot relative forward and right amounts
         drive(newForward, newRight, rotate);
     }
 
     // Thanks to FTC16072 for sharing this code!!
 
-    double maxPower = 1.0;
-    double maxSpeed = 1.0;  // make this slower for outreaches
     public void drive(double forward, double right, double rotate) {
         // This calculates the power needed for each wheel based on the amount of forward,
         // strafe right, and rotate
@@ -124,7 +130,7 @@ public class MecanumDriveFunctions {
 
 
         // This is needed to make sure we don't pass > 1.0 to any wheel
-        // It allows us to keep all of the motors in proportion to what they should
+        // It allows us to keep all the motors in proportion to what they should
         // be and not get clipped
         maxPower = Math.max(maxPower, Math.abs(frontLeftPower));
         maxPower = Math.max(maxPower, Math.abs(frontRightPower));
@@ -150,10 +156,10 @@ public class MecanumDriveFunctions {
 
     public String[] getTelemtry(){
         return new String[]{
-                "---Max power and speed---",
-                "Max power:" + maxPower,
-                "Max speed:" + maxSpeed,
-                "---Motor Power---",
+                //"---Max power and speed---",
+                //"Max power:" + maxPower,
+                //"Max speed:" + maxSpeed,
+                //"---Motor Power---",
                 "FL:" + Double.toString(frontLeft.getPower()),
                 "FR:" + Double.toString(frontRight.getPower()),
                 "BL:" + Double.toString(backLeft.getPower()),

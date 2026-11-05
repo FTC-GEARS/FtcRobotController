@@ -2,7 +2,6 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 public class MainGuts {
@@ -47,7 +46,8 @@ public class MainGuts {
     }
 
     private void setShooterOn() {
-        shooter.setPower(1.0);
+        //shooter.setPower(1.0);
+        shooter.setVelocity(shooterRPM);
     }
 
     public void togglePasser() {
@@ -82,7 +82,7 @@ public class MainGuts {
         return passer != null ? passer.getPower() : 0.0;
     }
 
-    public double getShooterPower() {
-        return shooter != null ? shooter.getPower() : 0.0;
+    public double getShooterVelocity() {
+        return shooter != null ? shooter.getVelocity() : 0.0;
     }
 }

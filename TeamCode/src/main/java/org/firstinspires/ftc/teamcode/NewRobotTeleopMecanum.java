@@ -23,7 +23,7 @@ public class NewRobotTeleopMecanum extends OpMode {
         mGuts.initGuts(hardwareMap, maxPasser, shooterRPM);
     }
 
-    private boolean previousA, previousB, previousX, previousY, previousDU, previousDD = false;
+    private boolean previousA, previousShoot, previousX, previousY, previousDU, previousDD, previousResetYaw = false;
 
     @Override
     public void loop() {
@@ -37,11 +37,12 @@ public class NewRobotTeleopMecanum extends OpMode {
 
         // Button inputs
         boolean currentA = gamepad2.a;
-        boolean currentB = gamepad2.b;
+        boolean currentShoot = gamepad2.b||gamepad1.b;
         boolean currentX = gamepad2.x;
-        boolean currentY = gamepad2.y || gamepad1.y;
+        boolean currentY = gamepad2.y;
         boolean currentDU = gamepad2.dpad_up;
         boolean currentDD = gamepad2.dpad_down;
+        boolean currentResetYaw = gamepad1.left_trigger_pressed && gamepad1.right_trigger_pressed;
 
         if (currentDU && !previousDU) {
             shooterRPM += 100;
@@ -54,28 +55,33 @@ public class NewRobotTeleopMecanum extends OpMode {
         if (currentA && !previousA) {
             intake.toggleState();
         }
-        if (currentY && !previousY) {
+        if (currentShoot && !previousShoot) {
             mGuts.togglePasser();
         }
-        if (currentX && !previousX) {
+        if (currentY && !previousY) {
             mGuts.toggleShooter();
         }
+        if (currentResetYaw && !previousResetYaw) {
+            MDF.resetYaw();
+        }
+
 
         // Save state for next frame
         previousA = currentA;
-        previousB = currentB;
+        previousShoot = currentShoot;
         previousX = currentX;
         previousY = currentY;
         previousDU = currentDU;
         previousDD = currentDD;
+        previousResetYaw = currentResetYaw;
 
         // Telemetry on Driver Station
-        telemetry.addData("Shooter State", mGuts.getShooterState());
-        telemetry.addData("Shooter Power", mGuts.getShooterPower());
         telemetry.addData("Passer State", mGuts.getPasserState());
         telemetry.addData("Passer Power", mGuts.getPasserPower());
+        telemetry.addData("Shooter State", mGuts.getShooterState());
+        telemetry.addData("Shooter Velocity", mGuts.getShooterVelocity());
         telemetry.addData("Target Shooter RPM", shooterRPM);
         telemetry.addLine("--- Controls ---");
-        telemetry.addLine("A: Toggle Intake | Y: Toggle Passer | X: Toggle Shooter");
+        telemetry.addLine("X: Toggle Intake | O: Toggle Passer | tri: Toggle Shooter");
     }
 }
