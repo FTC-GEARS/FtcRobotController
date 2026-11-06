@@ -6,11 +6,11 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 @TeleOp(name = "Robot: MAIN MECANUM", group = "Robot")
 public class NewRobotTeleopMecanum extends OpMode {
 
-    public double maxIntake = 1.0;
-    public double maxPasser = 1.0;
+    public double maxIntake = 0.8;
+    public double maxPasser = 0.8;
     public double maxPower = 1.0;
     public double maxSpeed = 1.0;
-    public double shooterRPM = 3000;
+    public double shooterRPM = 1300;
 
     MecanumDriveFunctions MDF = new MecanumDriveFunctions();
     IntakeV3 intake = new IntakeV3();
@@ -45,9 +45,9 @@ public class NewRobotTeleopMecanum extends OpMode {
         boolean currentResetYaw = gamepad1.left_trigger_pressed && gamepad1.right_trigger_pressed;
 
         if (currentDU && !previousDU) {
-            shooterRPM += 100;
+            shooterRPM += 50;
         } else if (currentDD && !previousDD) {
-            shooterRPM -= 100;
+            shooterRPM -= 50;
         }
         mGuts.updateShooter(shooterRPM);
 
