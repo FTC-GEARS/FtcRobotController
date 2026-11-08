@@ -70,6 +70,10 @@ public class NewRobotTeleopMecanum extends OpMode {
         if (currentResetYaw && !previousResetYaw) {
             MDF.resetYaw();
         }
+        if(gamepad2.left_bumper){
+            intake.reversePasser();
+            mGuts.reversePasser();
+        }
 
 
         // Save state for next frame
@@ -87,7 +91,7 @@ public class NewRobotTeleopMecanum extends OpMode {
         telemetry.addData("Pinpoint Y (in)", String.format("%.2f", pose.getY(DistanceUnit.INCH)));
         telemetry.addData("Pinpoint Heading (deg)", String.format("%.2f", pose.getHeading(AngleUnit.DEGREES)));
         telemetry.addData("Passer State", mGuts.getPasserState());
-        telemetry.addData("Passer Power", mGuts.getPasserPower());
+        telemetry.addData("Passer Power", mGuts.getPasserPower())  ;
         telemetry.addData("Shooter State", mGuts.getShooterState());
         telemetry.addData("Shooter Velocity", mGuts.getShooterVelocity());
         telemetry.addData("Target Shooter RPM", shooterRPM);

@@ -13,16 +13,34 @@ public class MainGuts {
 
     public enum PasserState {
         MOTOR_ON,
-        MOTOR_OFF
+        MOTOR_OFF,
+        MOTOR_REVERSE
     }
 
     public enum ShooterState {
         MOTOR_ON,
-        MOTOR_OFF
+        MOTOR_OFF,
     }
+
 
     private PasserState passerState = PasserState.MOTOR_OFF;
     private ShooterState shooterState = ShooterState.MOTOR_OFF;
+
+    public void setPasserState(MainGuts.PasserState state) {
+        this.passerState = state;
+        switch (passerState) {
+            case MOTOR_ON:
+                passer.setPower(maxPasser);
+                break;
+            case MOTOR_REVERSE:
+                passer.setPower(-maxPasser);
+                break;
+            case MOTOR_OFF:
+            default:
+                passer.setPower(0.0);
+                break;
+        }
+    }
 
     public void initGuts(HardwareMap hardwareMap, double maxPasser, double shooterRPM) {
         this.maxPasser = maxPasser;
@@ -51,15 +69,16 @@ public class MainGuts {
     }
 
     public void togglePasser() {
-        if (passerState == PasserState.MOTOR_OFF) {
+        if (passerState != PasserState.MOTOR_ON) {
             passerState = PasserState.MOTOR_ON;
-            passer.setPower(maxPasser);
         } else {
             passerState = PasserState.MOTOR_OFF;
-            passer.setPower(0.0);
         }
     }
 
+    public void reversePasser() {
+        passerState = PasserState.MOTOR_REVERSE;
+    }
     public void toggleShooter() {
         if (shooterState == ShooterState.MOTOR_OFF) {
             shooterState = ShooterState.MOTOR_ON;
@@ -68,6 +87,7 @@ public class MainGuts {
             shooterState = ShooterState.MOTOR_OFF;
             shooter.setPower(0.0);
         }
+
     }
 
     public PasserState getPasserState() {
@@ -78,8 +98,9 @@ public class MainGuts {
         return shooterState;
     }
 
-    public double getPasserPower() {
-        return passer != null ? passer.getPower() : 0.0;
+    public String getPasserPower() {
+        return Double.toString( passer != null ? passer.getPower() : 0.0);
+
     }
 
     public double getShooterVelocity() {
