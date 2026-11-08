@@ -28,12 +28,17 @@
  */
 package org.firstinspires.ftc.teamcode;
 
-import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
+// Commented out REV IMU imports
+// import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
+// import com.qualcomm.robotcore.hardware.IMU;
+
+import com.qualcomm.hardware.gobilda.GoBildaPinpointDriver;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.qualcomm.robotcore.hardware.IMU;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.Pose2D;
 
 /*
  * This OpMode illustrates how to program your robot to drive field relative.  This means
@@ -48,13 +53,16 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
  * Use Android Studio to Copy this Class, and Paste it into your team's code folder with a new name.
  * Remove or comment out the @Disabled line to add this OpMode to the Driver Station OpMode list
  *
- */
-public class MecanumDriveFunctions {
+ */public class MecanumDriveFunctions {
     // This declares the four motors needed
     private DcMotor frontLeft, backLeft, frontRight, backRight;
 
-    // This declares the IMU needed to get the current direction the robot is facing
-    IMU imu;
+    // Commented out IMU needed to get the current direction the robot is facing
+    // IMU imu;
+
+    // GoBILDA Pinpoint Odometry Computer driver
+    private GoBildaPinpointDriver pinpoint;
+
     private double maxPower;
     private double maxSpeed;
 
@@ -83,6 +91,7 @@ public class MecanumDriveFunctions {
         backLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         backRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
+        /* Commented out REV IMU initialization
         imu = hardwareMap.get(IMU.class, "imu");
         // This needs to be changed to match the orientation on your robot
         RevHubOrientationOnRobot.LogoFacingDirection logoDirection =
@@ -94,17 +103,45 @@ public class MecanumDriveFunctions {
                 RevHubOrientationOnRobot(logoDirection, usbDirection);
         imu.initialize(new IMU.Parameters(orientationOnRobot));
         imu.resetYaw();
+        */
+
+        // GoBILDA Pinpoint initialization
+        pinpoint = hardwareMap.get(GoBildaPinpointDriver.class, "pinpoint");
+
+        // Set odometry pod offsets in MM (X offset, Y offset) relative to tracking center
+        // X pod offset: sideways distance to X (forward) pod (left is positive, right is negative)
+        // Y pod offset: forward distance to Y (strafe) pod (forward is positive, backward is negative)
+        pinpoint.setOffsets(-84.0, -168.0, DistanceUnit.MM);
+
+        // Set odometry pod resolution (e.g. goBILDA 4-bar pod or swingarm pod)
+        pinpoint.setEncoderResolution(GoBildaPinpointDriver.GoBildaOdometryPods.goBILDA_4_BAR_POD);
+
+        // Set odometry pod directions
+        pinpoint.setEncoderDirections(GoBildaPinpointDriver.EncoderDirection.FORWARD,
+                GoBildaPinpointDriver.EncoderDirection.FORWARD);
+
+        // Reset position to (0,0,0) and recalibrate IMU on pinpoint
+        pinpoint.resetPosAndIMU();
+    }
+
+    public void updatePinpoint() {
+        if (pinpoint != null) {
+            pinpoint.update();
+        }
     }
 
     // This routine drives the robot field relative
     public void driveFieldRelative(double forward, double right, double rotate) {
+        // Update pinpoint data
+        updatePinpoint();
+
         // First, convert direction being asked to drive to polar coordinates
         double theta = Math.atan2(forward, right);
         double r = Math.hypot(right, forward);
 
         // Second, rotate angle by the angle the robot is pointing
-        theta = AngleUnit.normalizeRadians(theta -
-                imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS));
+        double currentHeading = (pinpoint != null) ? pinpoint.getPosition().getHeading(AngleUnit.RADIANS) : 0.0;
+        theta = AngleUnit.normalizeRadians(theta - currentHeading);
 
         // Third, convert back to cartesian
         double newForward = r * Math.sin(theta);
@@ -149,17 +186,33 @@ public class MecanumDriveFunctions {
 
     // Inside mecanumDriveFunctions.java
     public void resetYaw() {
+        /* Commented out REV IMU reset
         if (imu != null) {
             imu.resetYaw();
         }
+        */
+        if (pinpoint != null) {
+            pinpoint.resetPosAndIMU();
+        }
+    }
+
+    public GoBildaPinpointDriver getPinpoint() {
+        return pinpoint;
+    }
+
+    public Pose2D getPose() {
+        if (pinpoint != null) {
+            return pinpoint.getPosition();
+        }
+        return new Pose2D(DistanceUnit.INCH, 0, 0, AngleUnit.RADIANS, 0);
     }
 
     public String[] getTelemtry(){
+        Pose2D pose = getPose();
         return new String[]{
-                //"---Max power and speed---",
-                //"Max power:" + maxPower,
-                //"Max speed:" + maxSpeed,
-                //"---Motor Power---",
+                "X (in): " + String.format("%.2f", pose.getX(DistanceUnit.INCH)),
+                "Y (in): " + String.format("%.2f", pose.getY(DistanceUnit.INCH)),
+                "Heading (deg): " + String.format("%.2f", pose.getHeading(AngleUnit.DEGREES)),
                 "FL:" + Double.toString(frontLeft.getPower()),
                 "FR:" + Double.toString(frontRight.getPower()),
                 "BL:" + Double.toString(backLeft.getPower()),
@@ -167,3 +220,4 @@ public class MecanumDriveFunctions {
         };
     }
 }
+

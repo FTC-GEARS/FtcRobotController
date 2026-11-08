@@ -3,6 +3,10 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.Pose2D;
+
 @TeleOp(name = "Robot: MAIN MECANUM", group = "Robot")
 public class NewRobotTeleopMecanum extends OpMode {
 
@@ -27,6 +31,8 @@ public class NewRobotTeleopMecanum extends OpMode {
 
     @Override
     public void loop() {
+        // Update Pinpoint odometry computer
+        MDF.updatePinpoint();
 
         // Drive control
         if (gamepad1.left_bumper) {
@@ -76,6 +82,10 @@ public class NewRobotTeleopMecanum extends OpMode {
         previousResetYaw = currentResetYaw;
 
         // Telemetry on Driver Station
+        Pose2D pose = MDF.getPose();
+        telemetry.addData("Pinpoint X (in)", String.format("%.2f", pose.getX(DistanceUnit.INCH)));
+        telemetry.addData("Pinpoint Y (in)", String.format("%.2f", pose.getY(DistanceUnit.INCH)));
+        telemetry.addData("Pinpoint Heading (deg)", String.format("%.2f", pose.getHeading(AngleUnit.DEGREES)));
         telemetry.addData("Passer State", mGuts.getPasserState());
         telemetry.addData("Passer Power", mGuts.getPasserPower());
         telemetry.addData("Shooter State", mGuts.getShooterState());
@@ -85,3 +95,4 @@ public class NewRobotTeleopMecanum extends OpMode {
         telemetry.addLine("X: Toggle Intake | O: Toggle Passer | tri: Toggle Shooter");
     }
 }
+
