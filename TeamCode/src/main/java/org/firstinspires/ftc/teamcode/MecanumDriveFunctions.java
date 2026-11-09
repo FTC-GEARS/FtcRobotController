@@ -121,7 +121,9 @@ import org.firstinspires.ftc.robotcore.external.navigation.Pose2D;
                 GoBildaPinpointDriver.EncoderDirection.FORWARD);
 
         // Reset position to (0,0,0) and recalibrate IMU on pinpoint
-        pinpoint.resetPosAndIMU();
+        //pinpoint.resetPosAndIMU();
+        pinpoint.setPosition(new Pose2D(DistanceUnit.INCH, 0, 0, AngleUnit.DEGREES, -90));
+
     }
 
     public void updatePinpoint() {
