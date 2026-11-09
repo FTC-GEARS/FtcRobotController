@@ -36,6 +36,8 @@ public class MainGuts {
                 passer.setPower(-maxPasser);
                 break;
             case MOTOR_OFF:
+                passer.setPower(0.0);
+                break;
             default:
                 passer.setPower(0.0);
                 break;
@@ -70,14 +72,19 @@ public class MainGuts {
 
     public void togglePasser() {
         if (passerState != PasserState.MOTOR_ON) {
+
             passerState = PasserState.MOTOR_ON;
         } else {
+
             passerState = PasserState.MOTOR_OFF;
+
         }
+        setPasserState(passerState);
     }
 
     public void reversePasser() {
         passerState = PasserState.MOTOR_REVERSE;
+        setPasserState(passerState);
     }
     public void toggleShooter() {
         if (shooterState == ShooterState.MOTOR_OFF) {

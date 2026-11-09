@@ -39,6 +39,7 @@ public class IntakeV3 {
 
     public void reversePasser() {
         currentState = IntakeV3.MotorState.MOTOR_REVERSE;
+        setIntakeState(currentState);
     }
     public void toggleShooter() {
         if (currentState == IntakeV3.MotorState.MOTOR_OFF) {
@@ -48,6 +49,7 @@ public class IntakeV3 {
             currentState = IntakeV3.MotorState.MOTOR_OFF;
             intake.setPower(0.0);
         }
+        setIntakeState(currentState);
 
     }
 
