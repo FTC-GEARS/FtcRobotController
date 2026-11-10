@@ -111,7 +111,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.Pose2D;
         // Set odometry pod offsets in MM (X offset, Y offset) relative to tracking center
         // X pod offset: sideways distance to X (forward) pod (left is positive, right is negative)
         // Y pod offset: forward distance to Y (strafe) pod (forward is positive, backward is negative)
-        pinpoint.setOffsets(-84.0, -168.0, DistanceUnit.MM);
+        pinpoint.setOffsets(70, 110, DistanceUnit.MM);
 
         // Set odometry pod resolution (e.g. goBILDA 4-bar pod or swingarm pod)
         pinpoint.setEncoderResolution(GoBildaPinpointDriver.GoBildaOdometryPods.goBILDA_4_BAR_POD);
@@ -122,7 +122,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.Pose2D;
 
         // Reset position to (0,0,0) and recalibrate IMU on pinpoint
         //pinpoint.resetPosAndIMU();
-        pinpoint.setPosition(new Pose2D(DistanceUnit.INCH, 0, 0, AngleUnit.DEGREES, -90));
+        pinpoint.setPosition(new Pose2D(DistanceUnit.INCH, 0, 0, AngleUnit.DEGREES, 0));
 
     }
 
@@ -171,6 +171,9 @@ import org.firstinspires.ftc.robotcore.external.navigation.Pose2D;
         // This is needed to make sure we don't pass > 1.0 to any wheel
         // It allows us to keep all the motors in proportion to what they should
         // be and not get clipped
+        //THIS IS WRONG!!!!!!!!!
+        double maxPower = 1.0;
+
         maxPower = Math.max(maxPower, Math.abs(frontLeftPower));
         maxPower = Math.max(maxPower, Math.abs(frontRightPower));
         maxPower = Math.max(maxPower, Math.abs(backRightPower));
