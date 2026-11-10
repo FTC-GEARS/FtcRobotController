@@ -45,8 +45,8 @@ public class AutoShooterDrive extends LinearOpMode {
         telemetry.addData("Status", "Shooter & Intake ON");
         telemetry.update();
 
-        // 2. Wait 1 second
-        sleep(3000);
+        // 2. Wait 2 seconds
+        sleep(2000);
 
         // 3. Turn on the passer
         mGuts.setPasserState(MainGuts.PasserState.MOTOR_ON);
@@ -61,7 +61,7 @@ public class AutoShooterDrive extends LinearOpMode {
         double startY = startPose.getY(DistanceUnit.CM);
 
         double targetDistanceCm = 50.0;
-        double drivePower = 0.4;
+        double drivePower = 0.6;
         long timeoutMs = 5000; // 5-second safety timeout
         long startTime = System.currentTimeMillis();
 
