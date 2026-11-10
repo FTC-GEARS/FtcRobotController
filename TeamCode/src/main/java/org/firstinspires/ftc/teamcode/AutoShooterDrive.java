@@ -13,7 +13,9 @@ public class AutoShooterDrive extends LinearOpMode {
 
     private final MecanumDriveFunctions MDF = new MecanumDriveFunctions();
     private final MainGuts mGuts = new MainGuts();
+    private final IntakeV3 intake = new IntakeV3();
 
+    private final double maxIntake = 0.8;
     private final double maxPasser = 0.8;
     private final double maxPower = 1.0;
     private final double maxSpeed = 1.0;
@@ -24,6 +26,7 @@ public class AutoShooterDrive extends LinearOpMode {
         // Initialize drive base and robot mechanisms
         MDF.initMecanum(hardwareMap, maxPower, maxSpeed);
         mGuts.initGuts(hardwareMap, maxPasser, shooterRPM);
+        intake.initIntake(hardwareMap, maxIntake);
 
         telemetry.addData("Status", "Initialized and Ready");
         telemetry.update();
@@ -33,21 +36,23 @@ public class AutoShooterDrive extends LinearOpMode {
 
         if (isStopRequested()) return;
 
-        // 1. Turn on the shooter
+        // 1. Turn on the shooter and intake
         if (mGuts.getShooterState() == MainGuts.ShooterState.MOTOR_OFF) {
             mGuts.toggleShooter();
         }
+        intake.setIntakeState(IntakeV3.MotorState.MOTOR_ON);
 
-        telemetry.addData("Status", "Shooter ON");
+        telemetry.addData("Status", "Shooter & Intake ON");
         telemetry.update();
 
         // 2. Wait 1 second
-        sleep(1000);
+        sleep(3000);
 
         // 3. Turn on the passer
         mGuts.setPasserState(MainGuts.PasserState.MOTOR_ON);
-        telemetry.addData("Status", "Shooter ON & Passer ON");
+        telemetry.addData("Status", "Shooter, Intake & Passer ON");
         telemetry.update();
+        sleep(3000);
 
         // 4. Drive forward 50 cm using Pinpoint odometry distance tracking
         MDF.updatePinpoint();
@@ -84,7 +89,8 @@ public class AutoShooterDrive extends LinearOpMode {
         // Stop drive motors
         MDF.drive(0.0, 0.0, 0.0);
 
-        // 5. Turn off shooter and passer
+        // 5. Turn off shooter, passer, and intake
+        intake.setIntakeState(IntakeV3.MotorState.MOTOR_OFF);
         mGuts.setPasserState(MainGuts.PasserState.MOTOR_OFF);
         if (mGuts.getShooterState() == MainGuts.ShooterState.MOTOR_ON) {
             mGuts.toggleShooter();
@@ -94,3 +100,4 @@ public class AutoShooterDrive extends LinearOpMode {
         telemetry.update();
     }
 }
+
