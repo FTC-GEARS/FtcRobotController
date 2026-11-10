@@ -8,7 +8,7 @@ public class MainGuts {
 
     private DcMotorEx shooter, passer;
 
-    private double shooterRPM = 1300;
+    private double shooterRPM = 1200;
     private double maxPasser = 0.8;
 
     public enum PasserState {
