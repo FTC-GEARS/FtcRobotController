@@ -5,6 +5,7 @@ import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.eventloop.opmode.Utility;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.MotorControlAlgorithm;
@@ -45,7 +46,7 @@ import java.util.Locale;
  * NOTE: MainGuts passes "shooterRPM" straight into setVelocity(), which is in TICKS PER
  *       SECOND by default (not RPM). The target here is therefore also ticks/sec.
  */
-@TeleOp(name = "Util: Demo AI PIDF Cal", group = "Utility")
+@Utility(name = "Util: Demo AI PIDF Cal")
 public class DemoAIPIDFcal extends LinearOpMode {
 
     // ------------------------------------------------------------------ CONFIG
