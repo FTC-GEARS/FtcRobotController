@@ -1,10 +1,16 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
+@Config
 public class MainGuts {
+
+    public static int MAGIC_NUMBER = 1;
+
+    private double p, i, d, f;
 
     private DcMotorEx shooter, passer;
 
@@ -67,7 +73,8 @@ public class MainGuts {
 
     private void setShooterOn() {
         //shooter.setPower(1.0);
-        shooter.setVelocity(shooterRPM);
+        shooter.setVelocityPIDFCoefficients(p, i, d, f);
+        shooter.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
 
     public void togglePasser() {
