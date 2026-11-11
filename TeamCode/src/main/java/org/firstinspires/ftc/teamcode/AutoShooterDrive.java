@@ -61,7 +61,7 @@ public class AutoShooterDrive extends LinearOpMode {
         double startY = startPose.getY(DistanceUnit.CM);
 
         double targetDistanceCm = 50.0;
-        double drivePower = 0.6;
+        double drivePower = 0.4;
         long timeoutMs = 5000; // 5-second safety timeout
         long startTime = System.currentTimeMillis();
 
@@ -95,6 +95,42 @@ public class AutoShooterDrive extends LinearOpMode {
         if (mGuts.getShooterState() == MainGuts.ShooterState.MOTOR_ON) {
             mGuts.toggleShooter();
         }
+
+        sleep(250);
+
+        // 6. Strafe left 2 feet (24 inches) using Pinpoint odometry
+        MDF.updatePinpoint();
+        Pose2D strafeStartPose = MDF.getPose();
+        double strafeStartX = strafeStartPose.getX(DistanceUnit.INCH);
+        double strafeStartY = strafeStartPose.getY(DistanceUnit.INCH);
+
+        double targetStrafeDistanceInches = 24.0;
+        double strafePower = 0.5;
+        long strafeTimeoutMs = 6000; // 6-second safety timeout
+        long strafeStartTime = System.currentTimeMillis();
+
+        while (opModeIsActive() && (System.currentTimeMillis() - strafeStartTime) < strafeTimeoutMs) {
+            MDF.updatePinpoint();
+            Pose2D currentPose = MDF.getPose();
+
+            double deltaX = currentPose.getX(DistanceUnit.INCH) - strafeStartX;
+            double deltaY = currentPose.getY(DistanceUnit.INCH) - strafeStartY;
+            double distanceTraveled = Math.hypot(deltaX, deltaY);
+
+            if (distanceTraveled >= targetStrafeDistanceInches) {
+                break;
+            }
+
+            // Strafe left (robot-relative: forward=0, right=-strafePower)
+            MDF.drive(0.0, -strafePower, 0.0);
+
+            telemetry.addData("Status", "Strafing Left 2ft");
+            telemetry.addData("Distance (in)", String.format(Locale.US, "%.2f / %.2f", distanceTraveled, targetStrafeDistanceInches));
+            telemetry.update();
+        }
+
+        // Stop drive motors
+        MDF.drive(0.0, 0.0, 0.0);
 
         telemetry.addData("Status", "Autonomous Sequence Complete");
         telemetry.update();
