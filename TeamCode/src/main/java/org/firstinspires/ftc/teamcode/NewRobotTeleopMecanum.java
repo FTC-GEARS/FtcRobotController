@@ -1,5 +1,8 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.acmerobotics.dashboard.FtcDashboard;
+import com.acmerobotics.dashboard.config.Config;
+import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -8,7 +11,10 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.Pose2D;
 
 @TeleOp(name = "Robot: MAIN MECANUM", group = "Robot")
+@Config
 public class NewRobotTeleopMecanum extends OpMode {
+
+    private FtcDashboard dashboard;
 
     public double maxIntake = 0.8;
     public double maxPasser = 0.8;
@@ -25,9 +31,18 @@ public class NewRobotTeleopMecanum extends OpMode {
         MDF.initMecanum(hardwareMap, maxPower, maxSpeed);
         intake.initIntake(hardwareMap, maxIntake);
         mGuts.initGuts(hardwareMap, maxPasser, shooterRPM);
+        dashboard = FtcDashboard.getInstance();
     }
 
     private boolean previousA, previousShoot, previousX, previousY, previousDU, previousDD, previousResetYaw = false;
+
+    TelemetryPacket mainPacket = new TelemetryPacket();
+    public void addTele(String caption, Object data){
+        data = data.toString();
+        telemetry.addData(caption, data);
+        mainPacket.put(caption, data);
+
+    }
 
     @Override
     public void loop() {
@@ -76,6 +91,7 @@ public class NewRobotTeleopMecanum extends OpMode {
         }
 
 
+
         // Save state for next frame
         previousA = currentA;
         previousShoot = currentShoot;
@@ -87,16 +103,18 @@ public class NewRobotTeleopMecanum extends OpMode {
 
         // Telemetry on Driver Station
         Pose2D pose = MDF.getPose();
-        telemetry.addData("Pinpoint X (in)", String.format("%.2f", pose.getX(DistanceUnit.INCH)));
-        telemetry.addData("Pinpoint Y (in)", String.format("%.2f", pose.getY(DistanceUnit.INCH)));
-        telemetry.addData("Pinpoint Heading (deg)", String.format("%.2f", pose.getHeading(AngleUnit.DEGREES)));
-        telemetry.addData("Passer State", mGuts.getPasserState());
-        telemetry.addData("Passer Power", mGuts.getPasserPower())  ;
-        telemetry.addData("Shooter State", mGuts.getShooterState());
-        telemetry.addData("Shooter Velocity", mGuts.getShooterVelocity());
-        telemetry.addData("Target Shooter RPM", shooterRPM);
-        telemetry.addLine("--- Controls ---");
-        telemetry.addLine("X: Toggle Intake | O: Toggle Passer | tri: Toggle Shooter");
+        addTele("Pinpoint X (in)", String.format("%.2f", pose.getX(DistanceUnit.INCH)));
+        addTele("Pinpoint Y (in)", String.format("%.2f", pose.getY(DistanceUnit.INCH)));
+        addTele("Pinpoint Heading (deg)", String.format("%.2f", pose.getHeading(AngleUnit.DEGREES)));
+        addTele("Passer State", mGuts.getPasserState());
+        addTele("Passer Power", mGuts.getPasserPower())  ;
+        addTele("Shooter State", mGuts.getShooterState());
+        addTele("Shooter Velocity", mGuts.getShooterVelocity());
+        addTele("Target Shooter RPM", shooterRPM);
+        addTele("--- Controls ---", "");
+        addTele("X: Toggle Intake | O: Toggle Passer | tri: Toggle Shooter","");
+
+        dashboard.sendTelemetryPacket(mainPacket);
     }
 }
 
