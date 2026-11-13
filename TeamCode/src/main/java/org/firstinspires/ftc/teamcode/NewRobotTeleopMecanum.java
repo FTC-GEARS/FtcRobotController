@@ -16,11 +16,11 @@ public class NewRobotTeleopMecanum extends OpMode {
 
     private FtcDashboard dashboard;
 
-    public double maxIntake = 0.8;
-    public double maxPasser = 0.8;
-    public double maxPower = 1.0;
-    public double maxSpeed = 1.0;
-    public double shooterRPM = 1300;
+    public static double maxIntake = 8;
+    public static double maxPasser = 0.8;
+    public static double maxPower = 1.0;
+    public static double maxSpeed = 1.0;
+    public static double shooterRPM = 1225;
 
     MecanumDriveFunctions MDF = new MecanumDriveFunctions();
     IntakeV3 intake = new IntakeV3();
@@ -66,29 +66,35 @@ public class NewRobotTeleopMecanum extends OpMode {
         boolean currentResetYaw = gamepad1.left_trigger_pressed && gamepad1.right_trigger_pressed;
 
         if (currentDU && !previousDU) {
-            shooterRPM += 50;
+            shooterRPM += 25;
         } else if (currentDD && !previousDD) {
-            shooterRPM -= 50;
+            shooterRPM -= 25;
         }
         mGuts.updateShooter(shooterRPM);
 
         // Triggers
-        if (currentA && !previousA) {
-            intake.toggleState();
-        }
-        if (currentShoot && !previousShoot) {
-            mGuts.togglePasser();
-        }
+
         if (currentY && !previousY) {
             mGuts.toggleShooter();
         }
         if (currentResetYaw && !previousResetYaw) {
             MDF.resetYaw();
+
+
         }
         if(gamepad2.left_bumper){
             intake.reversePasser();
             mGuts.reversePasser();
         }
+        else {
+            if (currentA && !previousA) {
+                intake.toggleState();
+            }
+            if (currentShoot && !previousShoot) {
+                mGuts.togglePasser();
+            }
+        }
+
 
 
 

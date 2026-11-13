@@ -1,20 +1,25 @@
 package org.firstinspires.ftc.teamcode;
 
+import static java.lang.Runtime.getRuntime;
+
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.MotorControlAlgorithm;
+import com.qualcomm.robotcore.hardware.PIDFCoefficients;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 @Config
 public class MainGuts {
 
-    public static int MAGIC_NUMBER = 1;
 
-    private double p, i, d, f;
+
+    private static double p = 54.3623, i = 0.0000, d = 5.4362, f = 12.1345;
 
     private DcMotorEx shooter, passer;
 
-    private double shooterRPM = 1200;
+    private double shooterRPM;
     private double maxPasser = 0.8;
 
     public enum PasserState {
@@ -28,6 +33,8 @@ public class MainGuts {
         MOTOR_OFF,
     }
 
+    private ElapsedTime timer = new ElapsedTime();
+    private boolean isTimerActive = false;
 
     private PasserState passerState = PasserState.MOTOR_OFF;
     private ShooterState shooterState = ShooterState.MOTOR_OFF;
@@ -39,7 +46,12 @@ public class MainGuts {
                 passer.setPower(maxPasser);
                 break;
             case MOTOR_REVERSE:
-                passer.setPower(-maxPasser);
+                timer.reset();
+                isTimerActive = true;
+                if (isTimerActive) {
+                    passer.setPower(-maxPasser);
+
+                }
                 break;
             case MOTOR_OFF:
                 passer.setPower(0.0);
@@ -62,6 +74,10 @@ public class MainGuts {
 
         shooter.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         passer.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+        shooter.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+         shooter.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER,
+         new PIDFCoefficients(p, i, d, f, MotorControlAlgorithm.PIDF));
     }
 
     public void updateShooter(double shooterRPM) {
@@ -72,9 +88,9 @@ public class MainGuts {
     }
 
     private void setShooterOn() {
-        //shooter.setPower(1.0);
-        shooter.setVelocityPIDFCoefficients(p, i, d, f);
-        shooter.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        shooter.setVelocity(shooterRPM);
+        //shooter.setVelocityPIDFCoefficients(p, i, d, f);
+        //shooter.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
 
     public void togglePasser() {
