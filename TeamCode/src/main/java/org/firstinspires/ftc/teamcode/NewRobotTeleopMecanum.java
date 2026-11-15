@@ -34,7 +34,7 @@ public class NewRobotTeleopMecanum extends OpMode {
         dashboard = FtcDashboard.getInstance();
     }
 
-    private boolean previousA, previousShoot, previousX, previousY, previousDU, previousDD, previousResetYaw = false;
+    private boolean previousA, previousShoot, previousX, previousY, previousDU, previousDD, previousL1, previousResetYaw = false;
 
     TelemetryPacket mainPacket = new TelemetryPacket();
     public void addTele(String caption, Object data){
@@ -64,6 +64,7 @@ public class NewRobotTeleopMecanum extends OpMode {
         boolean currentDU = gamepad2.dpad_up;
         boolean currentDD = gamepad2.dpad_down;
         boolean currentResetYaw = gamepad1.left_trigger_pressed && gamepad1.right_trigger_pressed;
+        boolean currentL1 = gamepad2.left_bumper;
 
         if (currentDU && !previousDU) {
             shooterRPM += 10;
@@ -82,26 +83,23 @@ public class NewRobotTeleopMecanum extends OpMode {
 
 
         }
-        if(gamepad2.left_bumper){
-            intake.reversePasser(true);
-            mGuts.reversePasser(true);
-        }
-        else {
-            boolean buttonPressed = false;
+        if(!currentL1){
             if (currentA && !previousA) {
                 intake.toggleState();
-                buttonPressed = true;
             }
             if (currentShoot && !previousShoot) {
                 mGuts.togglePasser();
-                buttonPressed = true;
-            }
-            if(!buttonPressed){
-                intake.reversePasser(false);
-                mGuts.reversePasser(false);
             }
         }
 
+        if(currentL1){
+            intake.reverseIntake(true);
+            mGuts.reversePasser(true);
+        }
+        else if(previousL1){
+            intake.reverseIntake(false);
+            mGuts.reversePasser(false);
+        }
 
 
 
@@ -113,6 +111,8 @@ public class NewRobotTeleopMecanum extends OpMode {
         previousDU = currentDU;
         previousDD = currentDD;
         previousResetYaw = currentResetYaw;
+        previousL1 = currentL1;
+
 
         // Telemetry on Driver Station
         Pose2D pose = MDF.getPose();

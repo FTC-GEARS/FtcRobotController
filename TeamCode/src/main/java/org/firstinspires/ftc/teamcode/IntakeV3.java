@@ -37,7 +37,7 @@ public class IntakeV3 {
         }
     }
 
-    public void reversePasser(boolean toState) {
+    public void reverseIntake(boolean toState) {
         if (toState) {
             currentState = IntakeV3.MotorState.MOTOR_REVERSE;
         }
