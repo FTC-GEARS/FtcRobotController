@@ -73,13 +73,19 @@ public class AutoShooterDrive extends LinearOpMode {
         sleep(250);
 
         // 6. Strafe right 2 feet (24 inches) using Pinpoint odometry
-       targetDistanceInches = 24.0;
+       targetDistanceInches = 20.0;
         driveByDistance(-drivePower, 0.0, 0.0, targetDistanceInches, DistanceUnit.INCH, timeoutMs, "Strafing right 2ft");
 
-        targetDistanceInches = 63.0;
+        sleep(250);
+
+
+        targetDistanceInches = 48.0;
         driveByDistance(0.0, -drivePower, 0.0, targetDistanceInches, DistanceUnit.INCH, timeoutMs, "Driving backward 40in");
 
-        targetDistanceInches .0;
+        sleep(250);
+
+
+        targetDistanceInches= 5.0;
         driveByDistance(-drivePower, 0.0, 0.0, targetDistanceInches, DistanceUnit.INCH, timeoutMs, "Strafing right 2ft");
 
 
