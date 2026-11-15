@@ -53,6 +53,7 @@ public class AutoShooterDrive extends LinearOpMode {
         telemetry.addData("Status", "Shooter, Intake & Passer ON");
         telemetry.update();
         sleep(3000);
+        // pauses because it needs time to shoot
 
         // 4. Drive forward 50 cm using Pinpoint odometry distance tracking
         MDF.updatePinpoint();
@@ -60,7 +61,7 @@ public class AutoShooterDrive extends LinearOpMode {
         double startX = startPose.getX(DistanceUnit.CM);
         double startY = startPose.getY(DistanceUnit.CM);
 
-        double targetDistanceCm = 50.0;
+        double targetDistanceCm = 40.0;
         double drivePower = 0.4;
         long timeoutMs = 5000; // 5-second safety timeout
         long startTime = System.currentTimeMillis();
@@ -78,9 +79,10 @@ public class AutoShooterDrive extends LinearOpMode {
             }
 
             // Drive forward (robot-relative)
-            MDF.drive(drivePower, 0.0, 0.0);
+            MDF.driveFieldRelative(0.0,-drivePower,0.0);
+            //MDF.drive(-drivePower, 0.0, 0.0);
 
-            telemetry.addData("Status", "Driving Forward 50cm");
+            telemetry.addData("Status", "Driving  backward 50cm");
             telemetry.addData("Distance (cm)", String.format(Locale.US, "%.2f / %.2f", distanceTraveled, targetDistanceCm));
             telemetry.addData("Shooter Velocity", mGuts.getShooterVelocity());
             telemetry.update();
@@ -122,9 +124,10 @@ public class AutoShooterDrive extends LinearOpMode {
             }
 
             // Strafe left (robot-relative: forward=0, right=-strafePower)
-            MDF.drive(0.0, -strafePower, 0.0);
+            //MDF.drive(0.0, strafePower, 0.0);
+            MDF.driveFieldRelative(-drivePower,0, 0);
 
-            telemetry.addData("Status", "Strafing Left 2ft");
+            telemetry.addData("Status", "Strafing right 2ft");
             telemetry.addData("Distance (in)", String.format(Locale.US, "%.2f / %.2f", distanceTraveled, targetStrafeDistanceInches));
             telemetry.update();
         }

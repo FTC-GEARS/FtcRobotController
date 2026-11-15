@@ -122,7 +122,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.Pose2D;
 
         // Reset position to (0,0,0) and recalibrate IMU on pinpoint
         //pinpoint.resetPosAndIMU();
-        pinpoint.setPosition(new Pose2D(DistanceUnit.INCH, 0, 0, AngleUnit.DEGREES, 0));
+        pinpoint.setPosition(new Pose2D(DistanceUnit.INCH, 0, 0, AngleUnit.DEGREES, -90));
 
     }
 
