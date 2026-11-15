@@ -37,8 +37,13 @@ public class IntakeV3 {
         }
     }
 
-    public void reversePasser() {
-        currentState = IntakeV3.MotorState.MOTOR_REVERSE;
+    public void reversePasser(boolean toState) {
+        if (toState) {
+            currentState = IntakeV3.MotorState.MOTOR_REVERSE;
+        }
+        else {
+            currentState = MotorState.MOTOR_ON;
+        }
         setIntakeState(currentState);
     }
     public void toggleShooter() {

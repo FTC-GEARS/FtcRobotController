@@ -83,16 +83,16 @@ public class NewRobotTeleopMecanum extends OpMode {
 
         }
         if(gamepad2.left_bumper){
-            intake.reversePasser();
-            mGuts.reversePasser();
+            mGuts.reversePasser(true);
         }
         else {
-            if (currentA && !previousA) {
-                intake.toggleState();
-            }
-            if (currentShoot && !previousShoot) {
-                mGuts.togglePasser();
-            }
+            mGuts.reversePasser(false);
+        }
+        if(gamepad2.right_bumper||gamepad2.left_bumper){
+            intake.reversePasser(true);
+        }
+        else if (!gamepad2.right_bumper||!gamepad2.left_bumper){
+            intake.reversePasser(false);
         }
 
 

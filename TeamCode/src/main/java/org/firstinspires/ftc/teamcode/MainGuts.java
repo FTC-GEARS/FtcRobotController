@@ -105,8 +105,13 @@ public class MainGuts {
         setPasserState(passerState);
     }
 
-    public void reversePasser() {
-        passerState = PasserState.MOTOR_REVERSE;
+    public void reversePasser(boolean toState) {
+        if(toState) {
+            passerState = PasserState.MOTOR_REVERSE;
+        }
+        else{
+            passerState = PasserState.MOTOR_OFF;
+        }
         setPasserState(passerState);
     }
     public void toggleShooter() {
