@@ -76,10 +76,10 @@ public class AutoShooterDrive extends LinearOpMode {
        targetDistanceInches = 24.0;
         driveByDistance(-drivePower, 0.0, 0.0, targetDistanceInches, DistanceUnit.INCH, timeoutMs, "Strafing right 2ft");
 
-        targetDistanceInches = 84.0;
+        targetDistanceInches = 63.0;
         driveByDistance(0.0, -drivePower, 0.0, targetDistanceInches, DistanceUnit.INCH, timeoutMs, "Driving backward 40in");
 
-        targetDistanceInches = 15.0;
+        targetDistanceInches .0;
         driveByDistance(-drivePower, 0.0, 0.0, targetDistanceInches, DistanceUnit.INCH, timeoutMs, "Strafing right 2ft");
 
 
