@@ -41,7 +41,7 @@ public class instaparkauto extends LinearOpMode {
 
 
         // 4. Drive backward using Pinpoint odometry distance tracking
-        double targetDistanceInches = 27.0;
+        double targetDistanceInches = 8.0;
         double drivePower = 0.4;
         long timeoutMs = 6000; // 6-second safety timeout
         driveByDistance(0.0, drivePower, 0.0, targetDistanceInches, DistanceUnit.INCH, timeoutMs, "Driving backward 40in");
