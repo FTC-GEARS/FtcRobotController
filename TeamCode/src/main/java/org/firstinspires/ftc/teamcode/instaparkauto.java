@@ -9,7 +9,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.Pose2D;
 
 import java.util.Locale;
 
-@Autonomous(name = "Auto: Shooter & Drive 50cm", group = "Autonomous")
+@Autonomous(name = "side instant park", group = "Autonomous")
 public class instaparkauto extends LinearOpMode {
 
     private final MecanumDriveFunctions MDF = new MecanumDriveFunctions();

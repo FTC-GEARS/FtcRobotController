@@ -20,7 +20,7 @@ public class AutoShooterDrive extends LinearOpMode {
     private final double maxPasser = 0.8;
     private final double maxPower = 1.0;
     private final double maxSpeed = 1.0;
-    private final double shooterRPM = 1300;
+    private final double shooterRPM = 1245;
 
     @Override
     public void runOpMode() throws InterruptedException {
