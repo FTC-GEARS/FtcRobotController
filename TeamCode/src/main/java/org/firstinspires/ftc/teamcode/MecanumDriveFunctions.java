@@ -61,7 +61,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.Pose2D;
     // IMU imu;
 
     // GoBILDA Pinpoint Odometry Computer driver
-    private GoBildaPinpointDriver pinpoint;
+    public GoBildaPinpointDriver pinpoint;
 
     private double maxPower;
     private double maxSpeed;

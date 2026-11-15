@@ -66,9 +66,9 @@ public class NewRobotTeleopMecanum extends OpMode {
         boolean currentResetYaw = gamepad1.left_trigger_pressed && gamepad1.right_trigger_pressed;
 
         if (currentDU && !previousDU) {
-            shooterRPM += 25;
+            shooterRPM += 10;
         } else if (currentDD && !previousDD) {
-            shooterRPM -= 25;
+            shooterRPM -= 10;
         }
         mGuts.updateShooter(shooterRPM);
 
