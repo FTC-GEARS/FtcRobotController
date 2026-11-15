@@ -112,6 +112,7 @@ public class MainGuts {
         else{
             passerState = PasserState.MOTOR_OFF;
         }
+
         setPasserState(passerState);
     }
     public void toggleShooter() {
