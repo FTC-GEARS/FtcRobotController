@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.Pose2D;
 
@@ -27,6 +28,7 @@ public class AutoShooterDrive extends LinearOpMode {
         MDF.initMecanum(hardwareMap, maxPower, maxSpeed);
         mGuts.initGuts(hardwareMap, maxPasser, shooterRPM);
         intake.initIntake(hardwareMap, maxIntake);
+        MDF.pinpoint.setPosition(new Pose2D(DistanceUnit.INCH, 0, 0, AngleUnit.DEGREES, -90));
 
         telemetry.addData("Status", "Initialized and Ready");
         telemetry.update();
@@ -55,41 +57,11 @@ public class AutoShooterDrive extends LinearOpMode {
         sleep(3000);
         // pauses because it needs time to shoot
 
-        // 4. Drive forward 50 cm using Pinpoint odometry distance tracking
-        MDF.updatePinpoint();
-        Pose2D startPose = MDF.getPose();
-        double startX = startPose.getX(DistanceUnit.CM);
-        double startY = startPose.getY(DistanceUnit.CM);
-
-        double targetDistanceCm = 40.0;
+        // 4. Drive backward using Pinpoint odometry distance tracking
+        double targetDistanceInches = 30.0;
         double drivePower = 0.4;
-        long timeoutMs = 5000; // 5-second safety timeout
-        long startTime = System.currentTimeMillis();
-
-        while (opModeIsActive() && (System.currentTimeMillis() - startTime) < timeoutMs) {
-            MDF.updatePinpoint();
-            Pose2D currentPose = MDF.getPose();
-
-            double deltaX = currentPose.getX(DistanceUnit.CM) - startX;
-            double deltaY = currentPose.getY(DistanceUnit.CM) - startY;
-            double distanceTraveled = Math.hypot(deltaX, deltaY);
-
-            if (distanceTraveled >= targetDistanceCm) {
-                break;
-            }
-
-            // Drive forward (robot-relative)
-            MDF.driveFieldRelative(0.0,-drivePower,0.0);
-            //MDF.drive(-drivePower, 0.0, 0.0);
-
-            telemetry.addData("Status", "Driving  backward 50cm");
-            telemetry.addData("Distance (cm)", String.format(Locale.US, "%.2f / %.2f", distanceTraveled, targetDistanceCm));
-            telemetry.addData("Shooter Velocity", mGuts.getShooterVelocity());
-            telemetry.update();
-        }
-
-        // Stop drive motors
-        MDF.drive(0.0, 0.0, 0.0);
+        long timeoutMs = 6000; // 6-second safety timeout
+        driveByDistance(0.0, -drivePower, 0.0, targetDistanceInches, DistanceUnit.INCH, timeoutMs, "Driving backward 40in");
 
         // 5. Turn off shooter, passer, and intake
         intake.setIntakeState(IntakeV3.MotorState.MOTOR_OFF);
@@ -100,43 +72,73 @@ public class AutoShooterDrive extends LinearOpMode {
 
         sleep(250);
 
-        // 6. Strafe left 2 feet (24 inches) using Pinpoint odometry
-        MDF.updatePinpoint();
-        Pose2D strafeStartPose = MDF.getPose();
-        double strafeStartX = strafeStartPose.getX(DistanceUnit.INCH);
-        double strafeStartY = strafeStartPose.getY(DistanceUnit.INCH);
+        // 6. Strafe right 2 feet (24 inches) using Pinpoint odometry
+       targetDistanceInches = 24.0;
+        driveByDistance(-drivePower, 0.0, 0.0, targetDistanceInches, DistanceUnit.INCH, timeoutMs, "Strafing right 2ft");
 
-        double targetStrafeDistanceInches = 24.0;
-        double strafePower = 0.5;
-        long strafeTimeoutMs = 6000; // 6-second safety timeout
-        long strafeStartTime = System.currentTimeMillis();
+        targetDistanceInches = 84.0;
+        driveByDistance(0.0, -drivePower, 0.0, targetDistanceInches, DistanceUnit.INCH, timeoutMs, "Driving backward 40in");
 
-        while (opModeIsActive() && (System.currentTimeMillis() - strafeStartTime) < strafeTimeoutMs) {
-            MDF.updatePinpoint();
-            Pose2D currentPose = MDF.getPose();
+        targetDistanceInches = 24.0;
+        driveByDistance(-drivePower, 0.0, 0.0, targetDistanceInches, DistanceUnit.INCH, timeoutMs, "Strafing right 2ft");
 
-            double deltaX = currentPose.getX(DistanceUnit.INCH) - strafeStartX;
-            double deltaY = currentPose.getY(DistanceUnit.INCH) - strafeStartY;
-            double distanceTraveled = Math.hypot(deltaX, deltaY);
-
-            if (distanceTraveled >= targetStrafeDistanceInches) {
-                break;
-            }
-
-            // Strafe left (robot-relative: forward=0, right=-strafePower)
-            //MDF.drive(0.0, strafePower, 0.0);
-            MDF.driveFieldRelative(-drivePower,0, 0);
-
-            telemetry.addData("Status", "Strafing right 2ft");
-            telemetry.addData("Distance (in)", String.format(Locale.US, "%.2f / %.2f", distanceTraveled, targetStrafeDistanceInches));
-            telemetry.update();
-        }
-
-        // Stop drive motors
-        MDF.drive(0.0, 0.0, 0.0);
 
         telemetry.addData("Status", "Autonomous Sequence Complete");
         telemetry.update();
+    }
+
+
+
+
+
+    /**
+     * Drives using field-relative controls until the target distance is reached or timeout occurs.
+     *
+     * @param forward           Forward/backward power
+     * @param right             Right/left strafe power
+     * @param rotate            Rotation power
+     * @param targetDistance    Target distance to travel
+     * @param distanceUnit      Unit of distance (e.g. DistanceUnit.CM or DistanceUnit.INCH)
+     * @param timeoutMs         Safety timeout in milliseconds
+     * @param statusDescription Status message to display in telemetry
+     */
+    private void driveByDistance(double forward, double right, double rotate,
+                                 double targetDistance, DistanceUnit distanceUnit,
+                                 long timeoutMs, String statusDescription) {
+        MDF.updatePinpoint();
+        Pose2D startPose = MDF.getPose();
+        double startX = startPose.getX(distanceUnit);
+        double startY = startPose.getY(distanceUnit);
+
+        long startTime = System.currentTimeMillis();
+
+        while (opModeIsActive() && (System.currentTimeMillis() - startTime) < timeoutMs) {
+            MDF.updatePinpoint();
+            Pose2D currentPose = MDF.getPose();
+
+            double deltaX = currentPose.getX(distanceUnit) - startX;
+            double deltaY = currentPose.getY(distanceUnit) - startY;
+            double distanceTraveled = Math.hypot(deltaX, deltaY);
+
+            if (distanceTraveled >= targetDistance) {
+                break;
+            }
+
+            MDF.driveFieldRelative(forward, right, rotate);
+
+            telemetry.addData("Status", statusDescription);
+            String unitLabel = (distanceUnit == DistanceUnit.INCH) ? "in" : "cm";
+            telemetry.addData("Distance (" + unitLabel + ")",
+                    String.format(Locale.US, "%.2f / %.2f", distanceTraveled, targetDistance));
+            telemetry.addData("Shooter Velocity", mGuts.getShooterVelocity());
+            telemetry.update();
+        }
+
+
+
+
+        // Stop drive motors
+        MDF.drive(0.0, 0.0, 0.0);
     }
 }
 
