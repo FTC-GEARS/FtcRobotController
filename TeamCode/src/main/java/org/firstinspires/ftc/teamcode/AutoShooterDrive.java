@@ -58,7 +58,7 @@ public class AutoShooterDrive extends LinearOpMode {
         // pauses because it needs time to shoot
 
         // 4. Drive backward using Pinpoint odometry distance tracking
-        double targetDistanceInches = 30.0;
+        double targetDistanceInches = 10.0;
         double drivePower = 0.4;
         long timeoutMs = 6000; // 6-second safety timeout
         driveByDistance(0.0, -drivePower, 0.0, targetDistanceInches, DistanceUnit.INCH, timeoutMs, "Driving backward 40in");
@@ -76,7 +76,7 @@ public class AutoShooterDrive extends LinearOpMode {
        targetDistanceInches = 24.0;
         driveByDistance(-drivePower, 0.0, 0.0, targetDistanceInches, DistanceUnit.INCH, timeoutMs, "Strafing right 2ft");
 
-        targetDistanceInches = 84.0;
+        targetDistanceInches = 104.0;
         driveByDistance(0.0, -drivePower, 0.0, targetDistanceInches, DistanceUnit.INCH, timeoutMs, "Driving backward 40in");
 
         targetDistanceInches = 24.0;
