@@ -16,7 +16,7 @@ public class NewRobotTeleopMecanum extends OpMode {
 
     private FtcDashboard dashboard;
 
-    public static double maxIntake = 8;
+    public static double maxIntake = 0.8;
     public static double maxPasser = 0.7;
     public static double maxPower = 1.0;
     public static double maxSpeed = 1.0;

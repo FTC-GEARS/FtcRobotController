@@ -179,7 +179,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.Pose2D;
         maxPower = Math.max(maxPower, Math.abs(backRightPower));
         maxPower = Math.max(maxPower, Math.abs(backLeftPower));
 
-        // We multiply by maxSpeed so that it can be set lower for outreaches
+        // We multiply by maxDriveSpeed so that it can be set lower for outreaches
         // When a young child is driving the robot, we may not want to allow full
         // speed.
         frontLeft.setPower(maxSpeed * (frontLeftPower / maxPower));
