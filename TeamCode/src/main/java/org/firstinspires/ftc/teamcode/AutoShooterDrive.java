@@ -20,7 +20,7 @@ public class AutoShooterDrive extends LinearOpMode {
     private final double maxPasser = 0.8;
     private final double maxPower = 1.0;
     private final double maxSpeed = 1.0;
-    private final double shooterRPM = 1245;
+    private final double shooterRPM = 1215;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -73,20 +73,17 @@ public class AutoShooterDrive extends LinearOpMode {
         sleep(250);
 
         // 6. Strafe right 2 feet (24 inches) using Pinpoint odometry
-       targetDistanceInches = 20.0;
+       targetDistanceInches = 15.0;
         driveByDistance(-drivePower, 0.0, 0.0, targetDistanceInches, DistanceUnit.INCH, timeoutMs, "Strafing right 2ft");
 
         sleep(250);
 
 
-        targetDistanceInches = 48.0;
+        targetDistanceInches = 51.0;
         driveByDistance(0.0, -drivePower, 0.0, targetDistanceInches, DistanceUnit.INCH, timeoutMs, "Driving backward 40in");
 
         sleep(250);
 
-
-        targetDistanceInches= 9.0;
-        driveByDistance(-drivePower, 0.0, 0.0, targetDistanceInches, DistanceUnit.INCH, timeoutMs, "Strafing right 2ft");
 
 
         telemetry.addData("Status", "Autonomous Sequence Complete");
