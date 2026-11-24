@@ -38,6 +38,8 @@ public class PedroTeleop extends OpMode {
         intake.initIntake(hardwareMap, maxIntake);
         mGuts.initGuts(hardwareMap, maxPasser, shooterRPM);
         dashboard = FtcDashboard.getInstance();
+
+
     }
 
     private boolean previousA, previousShoot, previousX, previousY, previousDU, previousDD, previousL1, previousResetYaw = false;
@@ -50,13 +52,14 @@ public class PedroTeleop extends OpMode {
 
     }
 
+
     @Override
     public void loop() {
 
         DrivePowers powers = ManualDrive.fieldCentric(
                 -gamepad1.left_stick_y,
-                gamepad1.left_stick_x,
-                gamepad1.right_stick_x,
+                -gamepad1.left_stick_x,
+                -gamepad1.right_stick_x,
                 follower.pose().heading()
         );
         follower.manual(powers);
