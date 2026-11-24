@@ -59,7 +59,7 @@ public class PedroTeleop extends OpMode {
                 gamepad1.right_stick_x,
                 follower.pose().heading()
         );
-        ManualDrive.driveOrHold(follower, powers);
+        follower.manual(powers);
 
         follower.update();
 
