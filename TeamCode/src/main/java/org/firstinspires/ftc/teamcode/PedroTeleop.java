@@ -39,7 +39,6 @@ public class PedroTeleop extends OpMode {
         mGuts.initGuts(hardwareMap, maxPasser, shooterRPM);
         dashboard = FtcDashboard.getInstance();
 
-
     }
 
     private boolean previousA, previousShoot, previousX, previousY, previousDU, previousDD, previousL1, previousResetYaw = false;
