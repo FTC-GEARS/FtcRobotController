@@ -7,6 +7,7 @@ import com.pedropathing.follower.Follower;
 import com.pedropathing.math.Pose;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import org.firstinspires.ftc.teamcode.Sensors;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
@@ -29,6 +30,7 @@ public class PedroTeleop extends OpMode {
 
     IntakeV3 intake = new IntakeV3();
     MainGuts mGuts = new MainGuts();
+    Sensors sensors = new Sensors();
     private Follower follower;
 
 
@@ -38,6 +40,7 @@ public class PedroTeleop extends OpMode {
         intake.initIntake(hardwareMap, maxIntake);
         mGuts.initGuts(hardwareMap, maxPasser, shooterRPM);
         dashboard = FtcDashboard.getInstance();
+        sensors.initCam();
 
     }
 
@@ -54,6 +57,8 @@ public class PedroTeleop extends OpMode {
 
     @Override
     public void loop() {
+
+        sensors.runCam();
 
         DrivePowers powers = ManualDrive.fieldCentric(
                 -gamepad1.left_stick_y,
@@ -118,6 +123,7 @@ public class PedroTeleop extends OpMode {
 
 
 
+
         // Save state for next frame
         previousA = currentA;
         previousShoot = currentShoot;
@@ -140,6 +146,11 @@ public class PedroTeleop extends OpMode {
         addTele("X: Toggle Intake | O: Toggle Passer | tri: Toggle Shooter","");
 
         dashboard.sendTelemetryPacket(mainPacket);
+    }
+
+    @Override
+    public void stop(){
+        sensors.close();
     }
 }
 
