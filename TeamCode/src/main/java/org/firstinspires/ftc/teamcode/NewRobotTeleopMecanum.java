@@ -34,7 +34,7 @@ public class NewRobotTeleopMecanum extends OpMode {
         dashboard = FtcDashboard.getInstance();
     }
 
-    private boolean previousA, previousShoot, previousX, previousY, previousDU, previousDD, previousL1, previousResetYaw = false;
+    private boolean previousA, previousShoot, previousX, previousY, previousDU, previousDD, previousDR,  previousL1, previousResetYaw = false;
 
     TelemetryPacket mainPacket = new TelemetryPacket();
     public void addTele(String caption, Object data){
@@ -65,6 +65,7 @@ public class NewRobotTeleopMecanum extends OpMode {
         boolean currentDD = gamepad2.dpad_down;
         boolean currentResetYaw = gamepad1.left_trigger_pressed && gamepad1.right_trigger_pressed;
         boolean currentL1 = gamepad2.left_bumper;
+        boolean currentDR = gamepad1.dpad_right;
 
         if (currentDU && !previousDU) {
             shooterRPM += 10;
@@ -104,6 +105,7 @@ public class NewRobotTeleopMecanum extends OpMode {
 
 
         // Save state for next frame
+        previousDR = currentDR;
         previousA = currentA;
         previousShoot = currentShoot;
         previousX = currentX;
